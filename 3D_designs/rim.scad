@@ -1,13 +1,15 @@
 use <models\lamp_shell.scad>;
 use <models\screw_bottom_part.scad>;
 
-inside_size = [85,85];
-top_thickness = 2;
-bottom_thickness = 2;
-height = 20;
+
 rim();
 
 module rim(){
+  inside_size = [85,85];
+  top_thickness = 2;
+  bottom_thickness = 2;
+  height = 20;
+  
   union()
   {
     difference()
@@ -21,31 +23,43 @@ module rim(){
       
       inside_space(height, bottom_thickness);
       
-      cylinder(10,d=20);
+      hull()
+      {
+        translate([7,0,0])
+          cylinder(10,d=20);
+        translate([-7,0,0])
+          cylinder(10,d=20);
+      }
       
       translate([0,(-85+4)/2+28.5-2,0])
         cube([20,4,bottom_thickness*2+1], center=true);
       
       translate([(85+4)/2-32.5+9,0,0])
         cube([4,10,bottom_thickness*2+1], center=true);
-      translate([-46,-51.5,5])
-      rotate([90,0,0])
-        linear_extrude(1)
-          text("LAMPETHERE");
+      
+      logo();
+      
     }
     rotate([0,0,90])
       screw_bottom();
     translate([69/2,69/2,3])
-      cylinder(d=2.5, 2+3, center=true, $fn=60);
+      cylinder(d=2.8, 2+3, center=true, $fn=60);
     translate([69/2,-69/2,3])
-      cylinder(d=2.5, 2+3, center=true, $fn=60);
+      cylinder(d=2.8, 2+3, center=true, $fn=60);
     translate([-69/2,69/2,3])
-      cylinder(d=2.5, 2+3, center=true, $fn=60);
+      cylinder(d=2.8, 2+3, center=true, $fn=60);
     translate([-69/2,-69/2,3])
-      cylinder(d=2.5, 2+3, center=true, $fn=60);
+      cylinder(d=2.8, 2+3, center=true, $fn=60);
   }
 }
 
+module logo()
+{
+  translate([-46,-51.5,5])
+      rotate([90,0,0])
+        linear_extrude(1)
+          text("LAMPETHERE");
+}
 
 module inside_space(height, bottom_thickness)
 {

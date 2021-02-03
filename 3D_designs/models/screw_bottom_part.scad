@@ -29,7 +29,9 @@ module screw_bottom()
       cylinder(d=5.5, height, $fn=60, center=true);
     }
     translate([0,0,height/2])
-      cylinder(d=3.5, height+1, $fn=60, center=true);
+      cylinder(d=3.1, height+1, $fn=60, center=true);
     
+    translate([0,0,2+height-1])
+      cylinder(d=6, 4, $fn=60, center=true);
   }
 }

@@ -1,60 +1,72 @@
-lid_dimensions = 84;
-pcb_dimensions = 80;
-base_depth = 10; //tot op het bord
-button_height = 2;
-finger_d=5;
-border = (lid_dimensions - pcb_dimensions)/2;
-esp_h = 3;
-programmer_h = 3;
-power_h = 3.5;
+lid();
 
-translate([-42,-42,0])
-union()
-{
-  cube([lid_dimensions,lid_dimensions,1]);
+module lid(){
+  box_depth = 18;
+  pcb_max_h = 5;
+  ceiling_depth = 1;
+  wall = 2;
+  lid_dimensions = 84;
+  button_height = 3.5;
+  finger_d=6;
+  button_to_button=58;
 
-  
-  difference(){
-    cube([lid_dimensions,lid_dimensions,base_depth-button_height]);
-    translate([border,border,0])
-      cube([pcb_dimensions,pcb_dimensions,base_depth+1-button_height]);
-  }
-
-  translate([40+3.5/2,40+3.5/2,0])
-    difference()
+  //remove from center
+  //translate([-lid_dimensions/2,-lid_dimensions/2,0])
+  union()
+  {
+    //remove from z-center
+    translate([0,0,(box_depth-pcb_max_h)/2])
     {
-      cylinder(8,d=7,$fn=30);
-      translate([0,0,8-1])
-        sphere(d=5.5,$fn=30);
+      box(lid_dimensions, box_depth-pcb_max_h, wall, ceiling_depth);
+      light_barrier(lid_dimensions, wall, box_depth-pcb_max_h, ceiling_depth);
     }
     
-  offset = border+11;
-  offset2 = border+80-11;
-  translate([offset,offset,0])
-    cylinder(base_depth-button_height,d=finger_d,$fn=30);
-  translate([offset,offset2,0])
-    cylinder(base_depth-button_height,d=finger_d,$fn=30);
-  translate([offset2,offset,0])
-    cylinder(base_depth-button_height,d=finger_d,$fn=30);
-  translate([offset2,offset2,0])
-    cylinder(base_depth-button_height,d=finger_d,$fn=30);
-    
-  //esp
-  translate([(lid_dimensions-border)/2,0,0])
-    cube([2,lid_dimensions/2-3.5,base_depth-esp_h]);
-    
-  //programmer
-  translate([(lid_dimensions-border)/2,45,0])
-    cube([2,lid_dimensions/2-3.5,base_depth-programmer_h]);
-  translate([(lid_dimensions-border)/2,45+23,0])
-    cube([2,16,base_depth]);
-    
-  translate([0,40+1,0])
-    cube([lid_dimensions/2-3.5,2,base_depth-power_h]);
-  translate([0,40+1,0])
-    cube([8,2,base_depth]);
-  translate([42+3.5,40+1,0])
-    cube([lid_dimensions/2-3.5,2,base_depth-programmer_h]);
-  translate([42+3.5+21.5,40+1,0])  
-    cube([17,2,base_depth]);
+    nut_holder(ceiling_depth, 2.5);
+       
+    finger(finger_d, box_depth-button_height, button_to_button/2,1,1); 
+    finger(finger_d, box_depth-button_height, button_to_button/2,1,-1); 
+    finger(finger_d, box_depth-button_height, button_to_button/2,-1,1); 
+    finger(finger_d, box_depth-button_height, button_to_button/2,-1,-1); 
+  }
+  
+  module nut_holder(offset, height)
+  {
+    difference()
+    {
+      cylinder(d=12,h=height+offset,$fn=100);
+      cylinder(d=6.5,h=height+offset+.01,$fn=6);
+    }
+  }
+  
+  module finger(d,h,offset,x,y)
+  {
+     translate([x * offset, y * offset, h / 2])
+        cylinder(d = d, h = h, center = true);
+  }
+  
+  module light_barrier(width, wall, height, ceiling_depth)
+  {
+    difference()
+      {
+        union() 
+        {
+          cube([wall, width, height], true);
+          cube([width, wall, height], true);
+          cylinder(d=14,h=height,center=true);
+        }
+        translate([0,0,ceiling_depth])
+          cylinder(d=12,h=height,center=true);
+      }
+  }
+  
+  module box(width, height, wall, floor)
+  {
+    inner_width = width - 2 * wall;
+    difference()
+    {
+      cube([width ,width, height], true);
+      translate([0, 0, floor])
+        cube([inner_width, inner_width, height - floor], true);
+    }
+  }
 }

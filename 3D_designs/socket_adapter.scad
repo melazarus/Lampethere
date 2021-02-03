@@ -1,12 +1,15 @@
 //$fn=60;
 
+socket();
 
-union()
+module socket()
 {
-  translate([0,0,17]) ledstrips();
-  translate([0,0,0]) base();
+  union()
+  {
+    translate([0,0,17]) ledstrips();
+    translate([0,0,0]) base();
+  }
 }
-
 
 module ledstrips()
 {

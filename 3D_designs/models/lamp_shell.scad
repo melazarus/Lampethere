@@ -1,3 +1,5 @@
+lamp_shell(5);
+
 module lamp_shell(height)
 {
   // Represents the glass wall of the Ikea lamp.
