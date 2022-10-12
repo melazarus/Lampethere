@@ -1,21 +1,19 @@
-This is a temporary repository to hold code sandboxes, draft designs etc..
+## MQTT topics
 
-The current MQTT layout is as follows:
-
-- /lampethere
+- lampethere
     - /group
         - /**{groupID}**
-            - /message
-            - /name **[RETAINED]**
+            - /name
+            - /config
+                - /expire_messages_after 
+            - /messages ["ids of devices that pressed"]
+            - /first_message timestamp
+            - /last_message timestamp 
     - /device
         - /**{deviceID}**
-            - /message
-            - /online
-            - /version
             - /config
-                - /color
-                    - /set **[RETAINED]**
-                - /name
-                    - /set **[RETAINED]**
-                - /groups
-                    - /set **[RETAINED]**
+                - /colors **[RETAINED]** ["#rgb_1","#rgb_2"]
+                - /groups **[RETAINED]** ["id_2",..]
+                - /name **[RETAINED]** "human readable name"
+            - /version Active firmware version
+            - /heartbeat incremental number from 0 since boot, every 10 sec.
